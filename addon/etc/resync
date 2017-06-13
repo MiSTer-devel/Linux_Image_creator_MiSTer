@@ -1,0 +1,3 @@
+#!/bin/sh
+
+( while [ 1 ]; do sync; sleep 5; done ) &
