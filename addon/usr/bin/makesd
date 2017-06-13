@@ -1,53 +1,10 @@
 #!/bin/sh
 
-DRV=/dev/sda
+umount /dev/sda
+umount /dev/sda1
+umount /dev/sda2
+umount /dev/sda3
 
-echo ""
-
-if [[ $EUID -ne 0 ]]; then
-   echo "This script requires root rights. Quiting..."
-   echo ""
-   exit 0
-fi
-
-if [ ! -e "${DRV}" ]; then
-   echo "Couldn't find USB storage"
-   exit 0
-fi
-
-read -p "Do you wish to partition USB(${DRV}) device? " yn
-case $yn in
-   [Yy]* )
-           echo ""
-           echo "Unmounting some partitions (errors are ok here)..."
-           umount ${DRV}
-           umount ${DRV}1
-           umount ${DRV}2
-           umount ${DRV}3
-           echo ""
-           echo "Erasing of first 64MB of card..."
-           dd if=/dev/zero of=${DRV} bs=1M count=64 || exit 0
-
-           echo "Partitioning..."
-           (sfdisk ${DRV} <<-__END__
-              502M,+,0xB
-              2M,500M,0x83
-              1M,1M,0xA2
-__END__
-) || exit 0
-           sleep 3
-           echo "Copying partitions..."
-           dd if=/dev/mmcblk0p3 of=${DRV}3 || exit 0
-           dd if=/dev/mmcblk0p2 of=${DRV}2 || exit 0
-           sync
-           echo "Done!"
-           echo ""
-           echo "NOTE:"
-           echo "Plug the card into Windows PC and format with FAT32/exFAT using 32KB or 64KB"
-           echo "cluster size and copy MiSTer with menu.rbf there."
-           echo "If you just update the Linux part, then you don't need to format the card,"
-           echo "all files will be left as-is."
-       ;;
-   * ) ;;
-esac
+cd /make_sd
+./create_sd.sh /dev/sda
 
