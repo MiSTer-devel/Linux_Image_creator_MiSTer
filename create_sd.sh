@@ -88,7 +88,11 @@ __END__
 	tar xfp ${SRCDIR}/firmware.tar.gz --warning=no-timestamp -C ${DSTDIR}/lib/firmware || exit 0
 
 	echo "Copying additional modifications..."
-	cp -f -r ${SRCDIR}/addon/* ${DSTDIR} || exit 0
+	if [ -d ${SRCDIR}/.addon ]; then
+	   [ -f ${SRCDIR}/addon.tar ] && rm -f ${SRCDIR}/addon.tar
+           tar cvf ${SRCDIR}/addon.tar -C ${SRCDIR}/.addon .
+	fi
+	tar xfp ${SRCDIR}/addon.tar --warning=no-timestamp -C ${DSTDIR} || exit 0
 	mkdir -p ${DSTDIR}/media/fat || exit 0
 	echo "/dev/mmcblk0p1 /media/fat auto defaults,sync,nofail 0 0" >>${DSTDIR}/etc/fstab
 	sed 's/getty/agetty/g' -i ${DSTDIR}/etc/inittab
@@ -113,11 +117,12 @@ __EOF__
 	echo "Copying this installer..."
 	mkdir -p ${DSTDIR}/media/rootfs || exit 0
 	mkdir -p ${DSTDIR}/make_sd || exit 0
-	cp -f -r ${SRCDIR}/* ${DSTDIR}/make_sd || exit 0
+	cp -f ${SRCDIR}/* ${DSTDIR}/make_sd || exit 0
 
 	echo "Fixing permissions..."
 	chown -R root:root ${DSTDIR} || exit 0
 	sync
+	sleep 3
 
 	echo "Unmounting Linux partition..."
 	umount ${DSTDIR} || exit 0
