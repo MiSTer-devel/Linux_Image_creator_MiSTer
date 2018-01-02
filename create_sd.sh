@@ -99,6 +99,7 @@ __END__
 	sed 's/115200//g' -i ${DSTDIR}/etc/inittab
 	sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/etc\/resync\ \&' -i ${DSTDIR}/etc/inittab
 	sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTDIR}/etc/inittab
+	sed '/::sysinit:\/bin\/mount \-t proc proc \/proc/a ::sysinit:\/etc\/irqoncpu0' -i ${DSTDIR}/etc/inittab
 	sed '/PATH/ s/$/:\/media\/fat/' -i ${DSTDIR}/etc/profile
 
 cat >> ${DSTDIR}/etc/profile <<- __EOF__
