@@ -66,6 +66,7 @@ sleep 3
 
 echo "Unmounting Linux partition..."
 umount ${DSTDIR} || exit 0
+sleep 3
 
 echo "Done!"
 echo ""
