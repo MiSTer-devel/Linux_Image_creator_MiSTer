@@ -40,12 +40,10 @@ if [ -d ${SRCDIR}/.addon ]; then
 fi
 tar xfp ${SRCDIR}/addon.tar --warning=no-timestamp -C ${DSTDIR} || exit 0
 mkdir -p ${DSTDIR}/media/fat || exit 0
-#echo "/dev/mmcblk0p1 /media/fat auto defaults,sync,nofail 0 0" >>${DSTDIR}/etc/fstab
 sed 's/getty/agetty/g' -i ${DSTDIR}/etc/inittab
 sed 's/115200//g' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/etc\/resync\ \&' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTDIR}/etc/inittab
-sed '/::sysinit:\/bin\/mount \-t proc proc \/proc/a ::sysinit:\/etc\/irqoncpu0' -i ${DSTDIR}/etc/inittab
 mv ${DSTDIR}/etc/init.d/S40network ${DSTDIR}/etc/init.d/S90network
 rm ${DSTDIR}/sbin/udhcpc
 sed '/PATH/ s/$/:\/media\/fat\/linux:\./' -i ${DSTDIR}/etc/profile
