@@ -11,7 +11,7 @@ DIR=$PWD
 SRCDIR=${DIR}
 DSTDIR=/media/rootfs
 
-dd if=/dev/zero of=linux.img bs=64k count=3000
+dd if=/dev/zero of=linux.img bs=64k count=4000
 
 echo "Formatting Linux partition..."
 mkfs.ext4 -L rootfs linux.img || exit 0
@@ -44,6 +44,7 @@ sed 's/getty/agetty/g' -i ${DSTDIR}/etc/inittab
 sed 's/115200//g' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/etc\/resync\ \&' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTDIR}/etc/inittab
+echo "tmpfs		/var/lib/samba	tmpfs	mode=1777	0	0" >>${DSTDIR}/etc/fstab
 mv ${DSTDIR}/etc/init.d/S40network ${DSTDIR}/etc/init.d/S90network
 rm ${DSTDIR}/sbin/udhcpc
 sed '/PATH/ s/$/:\/media\/fat\/linux:\./' -i ${DSTDIR}/etc/profile
