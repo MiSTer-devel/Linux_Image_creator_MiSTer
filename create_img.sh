@@ -33,6 +33,10 @@ echo "Copying devices firmwares..."
 mkdir -p ${DSTDIR}/lib/firmware || exit 0
 tar xfp ${SRCDIR}/firmware.tar.gz --warning=no-timestamp -C ${DSTDIR}/lib/firmware || exit 0
 
+echo "Copying MidiLink files..."
+tar xfp ${SRCDIR}/MidiLink.tar.gz --warning=no-timestamp -C ${DSTDIR} || exit 0
+rm -rf ${DSTDIR}/media/fat
+
 echo "Copying additional modifications..."
 if [ -d ${SRCDIR}/.addon ]; then
    [ -f ${SRCDIR}/addon.tar ] && rm -f ${SRCDIR}/addon.tar
@@ -57,6 +61,7 @@ resize >/dev/null
 mount -o remount,rw /
 
 __EOF__
+
 
 echo "Fixing permissions..."
 chown -R root:root ${DSTDIR} || exit 0
