@@ -44,10 +44,12 @@ if [ -d ${SRCDIR}/.addon ]; then
 fi
 tar xfp ${SRCDIR}/addon.tar --warning=no-timestamp -C ${DSTDIR} || exit 0
 mkdir -p ${DSTDIR}/media/fat || exit 0
-sed 's/getty/agetty/g' -i ${DSTDIR}/etc/inittab
+sed 's/getty/agetty\ \-\-nohostname/g' -i ${DSTDIR}/etc/inittab
 sed 's/115200//g' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/etc\/resync\ \&' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTDIR}/etc/inittab
+sed '/::sysinit:\/etc\/init.d\/rcS/a ::sysinit:\/bin\/loadkeys\ \/etc\/kbd.map' -i ${DSTDIR}/etc/inittab
+sed '/GENERIC_SERIAL/a console::respawn:\/sbin\/agetty\ \-\-nohostname\ \-L\ tty0\ xterm' -i ${DSTDIR}/etc/inittab
 echo "tmpfs		/var/lib/samba	tmpfs	mode=1777	0	0" >>${DSTDIR}/etc/fstab
 mv ${DSTDIR}/etc/init.d/S40network ${DSTDIR}/etc/init.d/S90network
 rm ${DSTDIR}/sbin/udhcpc
