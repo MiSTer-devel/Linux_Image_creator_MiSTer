@@ -49,7 +49,8 @@ sed 's/115200//g' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/etc\/resync\ \&' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/etc\/init.d\/rcS/a ::sysinit:\/bin\/loadkeys\ \/etc\/kbd.map' -i ${DSTDIR}/etc/inittab
-sed '/GENERIC_SERIAL/a console::respawn:\/sbin\/agetty\ \-\-nohostname\ \-L\ tty1\ xterm' -i ${DSTDIR}/etc/inittab
+sed '/GENERIC_SERIAL/a ::sysinit:\/sbin\/gpm\ \-m\ \/dev\/input\/mice\ \-t\ imps2' -i ${DSTDIR}/etc/inittab
+sed '/GENERIC_SERIAL/a console::respawn:\/sbin\/agetty\ \-\-nohostname\ \-L\ tty1\ linux' -i ${DSTDIR}/etc/inittab
 echo "tmpfs		/var/lib/samba	tmpfs	mode=1777	0	0" >>${DSTDIR}/etc/fstab
 sed 's/\/sh/\/bash/g' -i ${DSTDIR}/etc/passwd
 mv ${DSTDIR}/etc/init.d/S40network ${DSTDIR}/etc/init.d/S90network
