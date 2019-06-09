@@ -11,7 +11,7 @@ DIR=$PWD
 SRCDIR=${DIR}
 DSTDIR=/media/rootfs
 
-dd if=/dev/zero of=linux.img bs=64k count=4000
+dd if=/dev/zero of=linux.img bs=64k count=5000
 
 echo "Formatting Linux partition..."
 mkfs.ext4 -L rootfs linux.img || exit 0
@@ -33,14 +33,10 @@ echo "Copying devices firmwares..."
 mkdir -p ${DSTDIR}/lib/firmware || exit 0
 tar xfp ${SRCDIR}/firmware.tar.gz --warning=no-timestamp -C ${DSTDIR}/lib/firmware || exit 0
 
-echo "Copying MidiLink files..."
-tar xfp ${SRCDIR}/MidiLink.tar.gz --warning=no-timestamp -C ${DSTDIR} || exit 0
-rm -rf ${DSTDIR}/media/fat
-
 echo "Copying additional modifications..."
 if [ -d ${SRCDIR}/.addon ]; then
    [ -f ${SRCDIR}/addon.tar ] && rm -f ${SRCDIR}/addon.tar
-          tar cvf ${SRCDIR}/addon.tar -C ${SRCDIR}/.addon .
+          tar cf ${SRCDIR}/addon.tar -C ${SRCDIR}/.addon .
 fi
 tar xfp ${SRCDIR}/addon.tar --warning=no-timestamp -C ${DSTDIR} || exit 0
 mkdir -p ${DSTDIR}/media/fat || exit 0
@@ -51,12 +47,16 @@ sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTD
 sed '/::sysinit:\/etc\/init.d\/rcS/a ::sysinit:\/bin\/loadkeys\ \/etc\/kbd.map' -i ${DSTDIR}/etc/inittab
 sed '/GENERIC_SERIAL/a ::sysinit:\/sbin\/gpm\ \-m\ \/dev\/input\/mice\ \-t\ imps2' -i ${DSTDIR}/etc/inittab
 sed '/GENERIC_SERIAL/a console::respawn:\/sbin\/agetty\ \-\-nohostname\ \-L\ tty1\ linux' -i ${DSTDIR}/etc/inittab
+
 echo "tmpfs		/var/lib/samba	tmpfs	mode=1777	0	0" >>${DSTDIR}/etc/fstab
+sed 's/rw,noauto/rw,noauto,noatime,nodiratime/g' -i ${DSTDIR}/etc/fstab
+sed 's/ext2/ext4/g' -i ${DSTDIR}/etc/fstab
+
 sed 's/\/sh/\/bash/g' -i ${DSTDIR}/etc/passwd
 mv ${DSTDIR}/etc/init.d/S40network ${DSTDIR}/etc/init.d/S90network
 rm ${DSTDIR}/sbin/udhcpc
 mkdir -p ${DSTDIR}/media/rootfs || exit 0
-sed '/PATH/ s/$/:\/media\/fat\/linux:\./' -i ${DSTDIR}/etc/profile
+sed '/PATH/ s/$/:\/media\/fat\/linux:\/media\/fat\/Scripts:\./' -i ${DSTDIR}/etc/profile
 sed s/\'\#\ \'/\'\$\(pwd\)\#\ \'/g -i ${DSTDIR}/etc/profile
 sed s/\'\$\ \'/\'\$\(pwd\)\$\ \'/g -i ${DSTDIR}/etc/profile
 
