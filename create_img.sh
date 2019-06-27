@@ -44,6 +44,7 @@ sed 's/getty/agetty\ \-\-nohostname/g' -i ${DSTDIR}/etc/inittab
 sed 's/115200//g' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/etc\/resync\ \&' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/bin\/mount \-a/a ::sysinit:\/media\/fat\/MiSTer\ \&' -i ${DSTDIR}/etc/inittab
+sed '/::sysinit:\/etc\/init.d\/rcS/a ::sysinit:\/bin\/setfont' -i ${DSTDIR}/etc/inittab
 sed '/::sysinit:\/etc\/init.d\/rcS/a ::sysinit:\/bin\/loadkeys\ \/etc\/kbd.map' -i ${DSTDIR}/etc/inittab
 sed '/GENERIC_SERIAL/a ::sysinit:\/sbin\/gpm\ \-m\ \/dev\/input\/mice\ \-t\ imps2' -i ${DSTDIR}/etc/inittab
 sed '/GENERIC_SERIAL/a console::respawn:\/sbin\/agetty\ \-\-nohostname\ \-L\ tty1\ linux' -i ${DSTDIR}/etc/inittab
