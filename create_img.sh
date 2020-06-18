@@ -61,6 +61,8 @@ sed '/PATH/ s/$/:\/media\/fat\/linux:\/media\/fat\/Scripts:\./' -i ${DSTDIR}/etc
 sed s/\'\#\ \'/\'\$\(pwd\)\#\ \'/g -i ${DSTDIR}/etc/profile
 sed s/\'\$\ \'/\'\$\(pwd\)\$\ \'/g -i ${DSTDIR}/etc/profile
 
+sed 's/RememberPowered.*/RememberPowered\ =\ false/g' -i ${DSTDIR}/etc/bluetooth/main.conf
+
 cat >> ${DSTDIR}/etc/profile <<- __EOF__
 
 export LC_ALL=en_US.UTF-8
