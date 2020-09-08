@@ -62,6 +62,16 @@ sed s/\'\#\ \'/\'\$\(pwd\)\#\ \'/g -i ${DSTDIR}/etc/profile
 sed s/\'\$\ \'/\'\$\(pwd\)\$\ \'/g -i ${DSTDIR}/etc/profile
 
 sed 's/RememberPowered.*/RememberPowered\ =\ false/g' -i ${DSTDIR}/etc/bluetooth/main.conf
+cat >> ${DSTDIR}/etc/bluetooth/main.conf <<- __EOF__
+
+# Permanently enables the Fast Connectable setting for adapters that
+# support it. When enabled other devices can connect faster to us,
+# however the tradeoff is increased power consumptions. This feature
+# will fully work only on kernel version 4.1 and newer. Defaults to
+# 'false'.
+FastConnectable = true
+
+__EOF__
 
 cat >> ${DSTDIR}/etc/profile <<- __EOF__
 
