@@ -24,7 +24,7 @@ fi
 mount linux.img ${DSTDIR} || exit 0
 
 echo "Copying main rootfs files..."
-tar xfp ${SRCDIR}/rootfs.tar.gz --warning=no-timestamp -C ${DSTDIR} || exit 0
+tar xfp ${SRCDIR}/rootfs.tar.bz2 --warning=no-timestamp -C ${DSTDIR} || exit 0
 
 echo "Copying kernel modules rootfs files..."
 tar xfp ${SRCDIR}/modules.tar.gz --strip-components=2 --warning=no-timestamp -C ${DSTDIR}/lib || exit 0
@@ -54,10 +54,7 @@ sed 's/rw,noauto/rw,noauto,noatime,nodiratime/g' -i ${DSTDIR}/etc/fstab
 sed 's/ext2/ext4/g' -i ${DSTDIR}/etc/fstab
 
 sed 's/\/sh/\/bash/g' -i ${DSTDIR}/etc/passwd
-rm ${DSTDIR}/etc/init.d/*network
-mv ${DSTDIR}/etc/init.d/*connman ${DSTDIR}/etc/init.d/S35connman
-mv ${DSTDIR}/etc/init.d/*udev ${DSTDIR}/etc/init.d/S40udev
-rm ${DSTDIR}/sbin/udhcpc
+rm ${DSTDIR}/etc/init.d/*sysctl
 mkdir -p ${DSTDIR}/media/rootfs || exit 0
 sed '/PATH/ s/$/:\/media\/fat\/linux:\/media\/fat\/Scripts:\./' -i ${DSTDIR}/etc/profile
 sed s/\'\#\ \'/\'\$\(pwd\)\#\ \'/g -i ${DSTDIR}/etc/profile
