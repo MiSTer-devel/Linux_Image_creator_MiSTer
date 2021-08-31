@@ -68,6 +68,7 @@ mount -o remount,rw /
 
 __EOF__
 echo -n $(date +%y%m%d) > ${DSTDIR}/MiSTer.version
+sed 's/#hostname/hostname/g' -i ${DSTDIR}/etc/dhcpcd.conf
 
 echo "Fixing permissions..."
 chown -R root:root ${DSTDIR} || exit 0
