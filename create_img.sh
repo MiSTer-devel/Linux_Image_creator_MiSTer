@@ -50,6 +50,7 @@ sed '/GENERIC_SERIAL/a ::sysinit:\/sbin\/gpm\ \-m\ \/dev\/input\/mice\ \-t\ imps
 sed '/GENERIC_SERIAL/a console::respawn:\/sbin\/agetty\ \-\-nohostname\ \-L\ tty1\ linux' -i ${DSTDIR}/etc/inittab
 
 echo "tmpfs		/var/lib/samba	tmpfs	mode=1777	0	0" >>${DSTDIR}/etc/fstab
+echo "tmpfs		/var/db/dhcpcd	tmpfs	mode=0750	0	0" >>${DSTDIR}/etc/fstab
 sed 's/rw,noauto/rw,noauto,noatime,nodiratime/g' -i ${DSTDIR}/etc/fstab
 sed 's/ext2/ext4/g' -i ${DSTDIR}/etc/fstab
 
