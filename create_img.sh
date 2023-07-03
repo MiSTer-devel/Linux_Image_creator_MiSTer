@@ -71,6 +71,8 @@ __EOF__
 echo -n $(date +%y%m%d) > ${DSTDIR}/MiSTer.version
 sed 's/#hostname/hostname/g' -i ${DSTDIR}/etc/dhcpcd.conf
 
+install -m 755 ${SRCDIR}/S39customnetwork ${DSTDIR}/etc/init.d/
+
 echo "Fixing permissions..."
 chown -R root:root ${DSTDIR} || exit 0
 sync
