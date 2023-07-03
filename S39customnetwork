@@ -34,6 +34,7 @@ copy() {
 start() {
   mount -o remount,rw /
   copy "${HOSTNAME_USER_FILE}" "${HOSTNAME_FILE}"
+  cat "${HOSTNAME_FILE}" > /proc/sys/kernel/hostname
   copy "${HOSTS_USER_FILE}" "${HOSTS_FILE}"
   copy "${DHCP_USER_FILE}" "${DHCP_FILE}"
   copy "${INTERFACES_USER_FILE}" "${INTERFACES_FILE}"
